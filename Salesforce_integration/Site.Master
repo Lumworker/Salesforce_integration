@@ -1,0 +1,340 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Salesforce_integration.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <link href="Content/datatables.min.css" rel="stylesheet" />
+    <link href="Content/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="Content/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/sideNav.css" rel="stylesheet" />
+    <link href="Content/smart_wizard.min.css" rel="stylesheet" />
+    <link href="Content/smart_wizard_theme_arrows.min.css" rel="stylesheet" />
+    <link href="Content/smart_wizard_theme_circles.min.css" rel="stylesheet" />
+    <link href="Content/smart_wizard_theme_dots.min.css" rel="stylesheet" />
+    <link href="Content/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="Content/jquery.datetimepicker.css" rel="stylesheet" />
+    <link href="Content/UploadFile.css" rel="stylesheet" />
+
+</head>
+<body>
+    <style>
+        .datepicker > div {
+            display: inherit;
+        }
+
+        .ui-autocomplete {
+            z-index: 999999;
+            max-height: 200px;
+            overflow-y: auto; /* prevent horizontal scrollbar */
+            overflow-x: hidden; /* add padding to account for vertical scrollbar */
+            padding-right: 20px;
+        }
+
+        .radio-group label {
+            overflow: hidden;
+        }
+
+        .radio-group input {
+            height: 1px;
+            width: 1px;
+            position: absolute;
+            top: -20px;
+        }
+
+        .radio-group .not-active {
+            color: #3276b1;
+            background-color: #fff;
+        }
+
+        .dropdown-menu {
+            -webkit-transition: all .5s ease-out;
+            transition: all .5s ease-out;
+            transform: rotateX(90deg);
+            transform-origin: top;
+            opacity: 0;
+            display: block;
+            border: none;
+            margin-left: 5rem;
+        }
+
+        .open .dropdown-menu {
+            opacity: 1;
+            transform: rotateX(0deg);
+            transform-origin: top;
+            border: none;
+            /*position: relative;*/
+            background-color: #bfbfbf;
+        }
+    </style>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+        <script src="Scripts/sweetalert.min.js"></script>
+        <script src="Scripts/datatables.min.js"></script>
+        <script src="Scripts/dataTables.responsive.min.js"></script>
+        <script src="Scripts/dataTables.bootstrap.js"></script>
+        <script src="Scripts/jquery.smartWizard.min.js"></script>
+        <script src="Scripts/jquery.datetimepicker.full.js"></script>
+        <script src="Scripts/datepicker.min.js"></script>
+        <script src="Scripts/Currency.js"></script>
+        <script src="Scripts/crypto-js.js"></script>
+
+
+        <div class="navbar navbar-inverse navbar-fixed-top" id="Mynavbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <span class="navbar-brand" style="font-size: 30px; cursor: pointer" onclick="openNav()"  >&#9776;</span>
+                    <a href="javascript:void(0)" class="navbar-brand" style="font-size: 20px; margin-top: 0.2em; cursor: default">Salesforce integration</a>
+                </div>
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <a href="./Import_Labor_Cost.aspx" id="Import_Labor_Cost" style="font-size: 18px;">Import Labor Cost</a>
+                    <a href="./Import_Misc.aspx" id="Import_Misc" style="font-size: 18px;">Import Misc</a>
+                    <div class="dropdown">
+                        <a id="ICashMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 18px;">Time Sheet Icash Export <span style="font-size: 15px;" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu animate" aria-labelledby="leaveMenu">
+                               <li><a href="./CallPlan.aspx" id="CallPlan" style="font-size: 18px;">Call Plan</a></li>
+                               <li><a href="./Time_Sheet_Adv.aspx" id="Time_Sheet_Adv" style="font-size: 18px;">Time Sheet Adv</a></li>
+                               <li><a href="./Time_Sheet_Actual.aspx" id="Time_Sheet_Actual" style="font-size: 18px;">Time Sheet Actual</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <a id="PricelistMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 18px;">Price List<span style="font-size: 15px;" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu animate" aria-labelledby="PricelistMenu">
+                               <li><a href="./Price_List_Product.aspx" id="Price_List_Product" style="font-size: 18px;">Product</a></li>
+                               <li><a href="./Price_List_Price_Book.aspx" id="Price_List_Price_Book" style="font-size: 18px;">Price book</a></li>
+                               <li><a href="./Price_List_Price_Book_Entry.aspx" id="Price_List_Price_Book_Entry" style="font-size: 18px;">Price book Entry</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ul class="nav navbar-nav pull-go-to-right ul_site_ref" style="float:right;">
+                    <li style="margin-top: 0.2em;">
+                        <button type="button" class="hovermenuprofile" data-toggle="modal" data-target="#ModalMenuSiteRef" style="background-color: #b3e6ff; border: none; margin-top: 15px; margin-left: 10px; margin-bottom: 15px; border-radius: 10Px; width: 100px"><span id="Showsite_ref" style="font-size:11px">Site_ref</span> <i class='glyphicon glyphicon-log-out'></i></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="modal fade" id="IMGUpload" style="display: none; position: fixed; z-index: 9999; overflow: auto; top: 40%;text-align:center;" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <img src="images/PATKOL2.gif" class="modal-content imgPreviewG" style="width: 10em; height: 10em;">
+            </div>
+        </div>
+
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            </footer>
+        </div>
+        
+
+         <div class="modal fade" id="ModalMenuSiteRef" role="dialog" style="z-index: 9999;">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content" style="max-width: 100%">
+                    <div class="modal-header">
+                        <div class="col-md-12 col-lg-12 col-sm-12" style="margin-bottom: 1em; padding-left: 0.5em;">
+                           <button type="button" class="close btn_hide_Siteref" data-dismiss="modal" style="font-size: 2.5em;">&times;</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <p class="text-center">
+                                <img class="text-center" src="images/PATKOL2.gif" />
+                            </p>
+                            <div class="col-md=12">
+                                <div class="form-group">
+                                    <h3 style="text-align: center">Select Company</h3>
+                                </div>
+                                <div class=" row form-group">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <select id="text_Navsite_ref" class="form-control" style="margin: auto; max-width: 350px !important;min-width: 350px !important; text-align-last: center;">
+                                                    <option value="">=======Please Select Company=======</option>
+                                                    <%--<option value="ERP_PKS">PATKOL PUBLIC COMPANY LIMITED</option>--%>
+                                                    <%--<option value="ERP_PKMS">PATKOL ICE SOLUTIONS CO.,LTD.</option>--%>
+                                                    <%--<option value="CRP2_PKMS">PATKOL ICE SOLUTIONS CO.,LTD.</option>--%>
+                                                    <%--<option value="ERP_TG">TYGIENIC CO., LTD.</option>
+                                                    <option value="ERP_HA">HEATAWAY COMPANY LIMITED</option>
+                                                    <option value="ERP_SPN">SPANEL</option>--%>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>
+                                    <button id="clickselect_Nevsite_ref" class="btn btn-info btn-block" type="button" style="max-width: 350px; margin: auto">Submit</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn_hide_Siteref" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <script type="text/javascript">
+
+             $(document).ready(function () {
+                var site_ref = getAllUrlParams("site_ref");
+                 if (site_ref) {
+                     $(".btn_hide_Siteref").show();
+                 } else {
+                    $("#ModalMenuSiteRef").modal("show");
+                    $(".btn_hide_Siteref").hide();
+                 }
+
+                 $(document).on("click", "#clickselect_Nevsite_ref", function () {
+                    var url = window.location.pathname;   
+                    var select_site_ref = $("#text_Navsite_ref").val();
+                    window.location.href = url + '?site_ref=' + select_site_ref;
+                 });
+
+             });
+
+
+             function openNav() {
+                 document.getElementById("mySidenav").style.width = "300px";
+             }
+
+             function closeNav() {
+                 document.getElementById("mySidenav").style.width = "0";
+             }
+
+             function getAllUrlParams(sParam) {
+
+                 var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                     sURLVariables = sPageURL.split('&'),
+                     sParameterName,
+                     i;
+
+                 for (i = 0; i < sURLVariables.length; i++) {
+                     sParameterName = sURLVariables[i].split('=');
+
+                     if (sParameterName[0] === sParam) {
+                         return sParameterName[1];
+                     } else {
+
+                     }
+                 }
+             }
+
+             function CheckVW_Salesforce_site_ref(Page, site_ref) {
+                 if (Page != "" && site_ref != "") {
+                     $.ajax({
+                         type: "post",
+                         async: false,
+                         url: "<%=ResolveUrl("Default.aspx/CheckVW_Salesforce_site_ref")%>",
+                         contentType: "application/json; charset = utf-8",
+                         dataType: "json",
+                         data: JSON.stringify({ Page: Page, site_ref: site_ref }),
+                         success: function (response) {
+                             if (response.d.length > 0) {
+                                 Getsite_ref(Page, site_ref);
+                             } else {
+                                 window.location.href = window.location.href.split("?")[0];
+                             }
+                         }
+                     });
+                 }
+                 else {
+                        Getsite_ref(Page, "");
+                 }
+             }
+
+             function Getsite_ref(Page,site_ref) {
+                 $("#text_Navsite_ref").empty();
+                 var fragment = '<option value="">=======Please Select Company=======</option>';
+                 $.ajax({
+                     type: "post",
+                     async: false,
+                     url: "<%=ResolveUrl("Default.aspx/VW_Salesforce_site_ref")%>",
+                     contentType: "application/json; charset = utf-8",
+                     dataType: "json",
+                     data: JSON.stringify({ Page: Page }),
+                     success: function (response) {
+                         if (response.d.length > 0) {
+                             $.each(response.d, function (index, val) {
+                                 var site = val[0];
+                                 var Type_page = val[1];
+                                 var Corp_NameTH = val[2];
+                                 var Corp_NameEN = val[3];
+                                 if (site_ref == site) {
+                                     fragment += '<option value="' + site + '"selected > ' + Corp_NameEN + '</option>';
+                                     $("#Showsite_ref").text(site_ref);
+                                     setMenu(site_ref);
+                                 }
+                                 else {
+                                     fragment += '<option value="' + site + '">' + Corp_NameEN + '</option>';
+                                 }
+                             });
+                         }
+                         $("#text_Navsite_ref").append(fragment);
+                     }
+
+                 });
+             }
+             function setMenu(site) {
+                 if (site) {
+                                     $("#Import_Labor_Cost").attr("href", "./Import_Labor_Cost.aspx?site_ref=" + site);
+                                     $("#Import_Misc").attr("href", "./Import_Misc.aspx?site_ref=" + site);
+                                     $("#CallPlan").attr("href", "./CallPlan.aspx" + "?site_ref=" + site);
+                                     $("#Time_Sheet_Adv").attr("href", "./Time_Sheet_Adv.aspx" + "?site_ref=" + site);
+                                     $("#Time_Sheet_Actual").attr("href", "./Time_Sheet_Actual.aspx" + "?site_ref=" + site);
+                                     $("#Price_List_Product").attr("href", "./Price_List_Product.aspx" + "?site_ref=" + site);
+                                     $("#Price_List_Price_Book").attr("href", "./Price_List_Price_Book.aspx" + "?site_ref=" + site);
+                                     $("#Price_List_Price_Book_Entry").attr("href", "./Price_List_Price_Book_Entry.aspx" + "?site_ref=" + site);
+
+                 }
+                 else {
+                                     $("#Import_Labor_Cost").attr("href", "./Import_Labor_Cost.aspx");
+                                     $("#Import_Misc").attr("href", "./Import_Misc.aspx");
+                                     $("#CallPlan").attr("href", "./CallPlan.aspx");
+                                     $("#Time_Sheet_Adv").attr("href", "./Time_Sheet_Adv.aspx");
+                                     $("#Time_Sheet_Actual").attr("href", "./Time_Sheet_Actual.aspx");
+                                     $("#Price_List_Product").attr("href", "./Price_List_Product.aspx");
+                                     $("#Price_List_Price_Book").attr("href", "./Price_List_Price_Book.aspx");
+                                     $("#Price_List_Price_Book_Entry").attr("href", "./Price_List_Price_Book_Entry.aspx");
+                 }
+             }
+
+             
+
+         </script>
+
+    </form>
+</body>
+</html>
